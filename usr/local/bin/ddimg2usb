@@ -1,0 +1,78 @@
+#!/bin/bash
+# Let's use the Bourne Again SHell
+
+# Make sure we are root so we can write to the device
+if [[ ${USER} != 'root' ]] ; then
+	/usr/bin/echo "You are not smart enough to run this script!"
+	# Alternatively, do not insult the user. Instead, write some generic failure message
+	# /usr/bin/echo "You must be root to run this script!"
+	
+	# Exit if cannot get root
+	exit 1
+fi
+
+# Prompt the user to make sure they are aware of what they are doing
+/usr/bin/echo "You are about to write the following image: " ${1}
+/usr/bin/echo "to the following device: " ${2}
+/usr/bin/sleep 3s
+
+# Give the user an opportunity to make sure they are doing what they intend
+/usr/bin/echo "Please observe the block device list to ensure that this is what you intend!"
+/usr/bin/lsblk
+/usr/bin/sleep 3s
+
+# Try to get the user to actually ensure that they know what they are doing
+/usr/bin/echo "Please confirm by typing 'if=${1} of=${2}' again (w/o quotes)"
+CHECK="if=${1} of=${2}"
+read INPUT
+while [[ ${INPUT} != ${CHECK} ]] ; do
+	/usr/bin/echo "Please confirm by typing '${CHECK}' again (w/o quotes)"
+	read INPUT
+	
+	if [[ ${INPUT} == "exit" ]] || [[ ${INPUT} == "quit" ]] || [[ ${INPUT} == "abort" ]] ; then
+		/usr/bin/echo "Exiting due to user command"
+		exit 1
+	fi
+done
+
+# Get the user to confirm the action again
+/usr/bin/echo "Please confirm by typing 'confirm' again (w/o quotes)"
+read INPUT
+CHECK="confirm"
+while [[ ${INPUT} != ${CHECK} ]] ; do
+	/usr/bin/echo "Please confirm by typing '${CHECK}' again (w/o quotes)"
+	read INPUT
+	
+	if [[ ${INPUT} == "exit" ]] || [[ ${INPUT} == "quit" ]] || [[ ${INPUT} == "abort" ]] ; then
+		/usr/bin/echo "Exiting due to user command"
+		exit 1
+	fi
+done
+
+
+# Actually write the image to the device
+
+#/usr/bin/dd if="${1}" of="${2}" bs=4M status=progress iflag=direct oflag=direct
+#/usr/bin/dd if="$1" of="$2" bs=4M status=progress iflag=direct oflag=direct
+#/usr/bin/dd if=$1 of=$2 bs=4M status=progress iflag=direct oflag=direct
+
+SCRIPT_ARGS="if=$1 of=$2 bs=4M status=progress iflag=direct oflag=direct"
+/usr/bin/dd ${SCRIPT_ARGS}
+
+/usr/bin/umount ${1}*
+/usr/bin/umount ${2}*
+
+# If it fails, dd likely didn't like the iflag and/or oflag, so we remove it and try again
+ECODE=$?
+if [[ $ECODE -ne 0 ]] ; then
+	/usr/bin/echo "The image exited with code ${ECODE}"
+	/usr/bin/echo "Would you like to try again without the 'iflag=direct' and 'oflag=direct' flags?"
+	read INPUT
+	if [[ ${INPUT} == "yes" ]] || [[ ${INPUT} == "y" ]] ; then 
+		SCRIPT_ARGS="if=$1 of=$2 bs=4M status=progress"
+	else
+		exit 1
+	fi
+fi
+/usr/bin/dd ${SCRIPT_ARGS}
+

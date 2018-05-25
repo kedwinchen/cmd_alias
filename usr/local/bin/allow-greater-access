@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#FILE=${@}
+#FILE="$*"
+FILE=$1
+
+PERM=$(/usr/bin/stat -c %a "${FILE}")
+
+if [[ $PERM -gt 700 ]] ; then
+	/usr/bin/chmod go+rx "${FILE}"
+#elif [[ $FILE -gt 600 ]] ; then 
+else
+	/usr/bin/chmod go+r "${FILE}"
+fi

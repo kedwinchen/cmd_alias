@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# bash /opt/Xilinx/Vivado/2018.1/bin/loader -exec ${@}
+# bash /opt/Xilinx/Vivado/2017.4/bin/loader -exec ${@}
+if [[ $# -ne 2 ]] ; then
+	echo "You must provide the following arguments!"
+	echo "(1) -- the program to launch (e.g., 'vivado')"
+	echo "(2) -- the version (e.g., '2017.4')"
+	echo "e.g., $0 vivado 2017.4"
+fi
+cd /tmp
+/bin/bash /opt/Xilinx/Vivado/${2}/bin/loader -exec ${1} &> /dev/null &

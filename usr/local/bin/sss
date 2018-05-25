@@ -1,0 +1,6 @@
+#!/bin/bash
+/usr/bin/rsync -chavzPHAXu "${@}"
+if [[ $? -ne 0 ]] ; then
+	echo $?
+fi
+#/usr/bin/rsync -chavzPHAXu "${1}" "${2}"

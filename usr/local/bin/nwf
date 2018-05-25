@@ -1,0 +1,4 @@
+#!/bin/bash
+cmd=$@
+$cmd
+notify-send "Command has finished" "Your command '$cmd' has finished"

@@ -1,0 +1,28 @@
+#!/bin/bash
+/usr/bin/echo "You are about to delete the following: " ${@}
+/usr/bin/echo "Please confirm by typing '${@}' again (w/o quotes)"
+read INPUT
+while [[ ${INPUT} != ${@} ]] ; do
+	/usr/bin/echo "Please confirm by typing '${@}' again (w/o quotes)"
+	read INPUT
+done
+/usr/bin/echo "Please confirm by typing 'confirm' (w/o quotes)"
+read INPUT
+while [[ ${INPUT} != "confirm" ]] ; do
+	if [[ ${INPUT} == "abort" ]] ; then
+		exit 1
+	fi
+	/usr/bin/echo "Please confirm by typing 'confirm' again (w/o quotes)"
+	/usr/bin/echo "You can abort by typing 'abort' (w/o quotes)"
+	read INPUT
+done
+/usr/bin/echo "Are you sure you wish to continue?"
+read INPUT
+while [[ ${INPUT} != "yes" ]] ; do
+	if [[ ${INPUT} == "no" ]] ; then
+		exit 1
+	fi
+	/usr/bin/echo "Please confirm by typing 'yes' again (w/o quotes)"
+	read INPUT
+done
+/usr/bin/shred -vxzfun 35 ${@}

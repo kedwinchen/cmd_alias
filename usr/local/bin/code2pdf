@@ -1,0 +1,7 @@
+#!/bin/bash
+#FILENAME=${1}
+#PSFILE=/tmp/${FILENAME%.*}.ps
+PSFILE=${1%.*}.ps
+/usr/bin/enscript -f Courier8 -B -p ${PSFILE} ${1}
+/usr/bin/ps2pdf ${PSFILE}
+/bin/rm ${PSFILE}

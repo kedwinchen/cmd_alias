@@ -1,0 +1,9 @@
+#!/bin/bash
+#if [[ $EUID -ne 0 ]] ; then
+#	echo "You are not smart enough to run this script!"
+#	echo "Exiting..."
+#	exit 1
+#fi
+
+kill -9 $(ps -elf | grep -v grep | grep $1 |awk -F " " '{ print $4 }')
+#kill -9 $(ps -elf | grep -v grep | grep $* |awk -F " " '{ print $4 }')

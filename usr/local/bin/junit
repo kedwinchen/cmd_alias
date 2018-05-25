@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# java org.junit.runner.JUnitCore ${@}
+#javac *.java
+#if [[ $? -ne 0 ]]; then
+#	exit 1
+#fi
+javac *.java && java org.junit.runner.JUnitCore $( echo ${1} | cut -d '.' -f 1) 
