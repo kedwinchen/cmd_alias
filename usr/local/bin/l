@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/bin/ls -hal ${@}
+/usr/bin/ls -hal --color=auto ${@}

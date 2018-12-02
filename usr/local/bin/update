@@ -1,1 +1,1 @@
-yes '' | aurman -Syyu ${@}
+yay -Syyu --sudoloop --color always --noconfirm --overwrite ${@}

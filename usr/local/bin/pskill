@@ -4,6 +4,5 @@
 #	echo "Exiting..."
 #	exit 1
 #fi
-
-kill -9 $(ps -elf | grep -v grep | grep $1 |awk -F " " '{ print $4 }')
+kill -9 $(ps -elf | grep -v grep | grep -i $1 |awk -F " " '{ print $4 }')
 #kill -9 $(ps -elf | grep -v grep | grep $* |awk -F " " '{ print $4 }')
