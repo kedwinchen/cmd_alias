@@ -1,1 +1,1 @@
-yay -Syyu --sudoloop --color always --noconfirm --overwrite ${@}
+yay -Syyu ${@} --sudoloop --color always --noconfirm --overwrite
