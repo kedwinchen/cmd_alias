@@ -1,18 +1,6 @@
 #!/bin/bash
 
-shred_file () 
-{
-    local file="${1}"
-    if [[ -d ${file} ]]; then
-        for item in $(ls -A ${file}); do
-            shred_file ${file}/${item}
-        done
-        rmdir ${file}
-    else
-        /usr/bin/shred -vxzfun 35 ${file}
-    fi
-}
-
+# Confirm the target
 echo "You are about to delete the following: " ${@}
 echo "Please confirm by typing '${@}' again (w/o quotes)"
 read INPUT
@@ -20,6 +8,8 @@ while [[ ${INPUT} != ${@} ]] ; do
 	echo "Please confirm by typing '${@}' again (w/o quotes)"
 	read INPUT
 done
+
+# Ensure confirm targt
 echo "Please confirm by typing 'confirm' (w/o quotes)"
 read INPUT
 while [[ ${INPUT} != "confirm" ]] ; do
@@ -30,6 +20,8 @@ while [[ ${INPUT} != "confirm" ]] ; do
 	echo "You can abort by typing 'abort' (w/o quotes)"
 	read INPUT
 done
+
+# Confirm check to ensure target
 echo "Are you sure you wish to continue?"
 read INPUT
 while [[ ${INPUT} != "yes" ]] ; do
@@ -39,6 +31,17 @@ while [[ ${INPUT} != "yes" ]] ; do
 	echo "Please confirm by typing 'yes' again (w/o quotes)"
 	read INPUT
 done
+
+# Actually shred everything
 for item in ${@}; do
-    shred_file "${item}"
+    # `shred` does not work on directories, so use `find` as a helper program
+    if [[ -d ${item} ]]; then
+        find ${item} -exec /usr/bin/shred -vxzfun 35 {} \;
+        # The directory should be empty by this point. Do not force removal
+        # if something left (which is why `rmdir` is used and not `rm -rf`)
+        rmdir ${file}
+    else
+        # It is just a regular file
+        /usr/bin/shred -vxzfun 35 ${item}
+    fi
 done
